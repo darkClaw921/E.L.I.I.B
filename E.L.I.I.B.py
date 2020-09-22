@@ -21,7 +21,7 @@ from threading import Thread
 import setings
 
 # VK setings
-vk_session = vk_api.VkApi(token = setings.vkDdkgtaApi)
+vk_session = vk_api.VkApi(token = setings.vkProfkomApi2)
 longpoll = VkLongPoll(vk_session)
 vk = vk_session.get_api()
 
@@ -94,7 +94,7 @@ def keyboardCreater(ButtonText1, ButtonText2, ButtonText3, ButtonText4):
     return keyboard
 
 def getQuestion(randomId, userID):
-    global rowId, rowQuestions1, rowName, rowSecondName, rowWork, void, photoGet
+    global rowId, rowQuestions1, rowName, rowSecondName, rowWork, void, photoGet, rowQuestions2, rowQuestions3, rowQuestions4, rowQuestions5, rowQuestions6
 
     userInfo = vk.users.get(user_ids = userID) # Получили ответ в виде массива из одного списка
     userInfo = userInfo[0] 
@@ -105,6 +105,21 @@ def getQuestion(randomId, userID):
     sheet.update_cell(rowSecondName, 3, userInfo["last_name"])
     rowSecondName += 1
 
+    rowQuestions1ForUsers = rowQuestions1
+    rowQuestions2ForUsers = rowQuestions2
+    rowQuestions3ForUsers = rowQuestions3
+    rowQuestions4ForUsers = rowQuestions4
+    rowQuestions5ForUsers = rowQuestions5
+    rowQuestions6ForUsers = rowQuestions6
+    rowQuestions1 += 1
+    rowQuestions2 += 1
+    rowQuestions3 += 1
+    rowQuestions4 += 1
+    rowQuestions5 += 1
+    rowQuestions6 += 1    
+
+
+
     rowId += 1
     countPoint = 0 # cчётчик праильных ответов
 
@@ -113,7 +128,7 @@ def getQuestion(randomId, userID):
                     random_id = randomId,
                     #attachment='photo-194390511_457239038', # ссылк фото из альбома сообщества
                     message = """
-Привет, первокурсник. Этот квест создан для того, чтобы ты улыбнулся, немного поднапряг извилины и сделал на своем смартфоне пару прикольных фото. Если будешь не лениться - закончишь КГТА. А если будешь не лениться в квесте - получишь приз! Удачи! Держи первое задание:
+Привет, первокурсник. Этот квест создан для того, чтобы ты улыбнулся, немного поднапряг извилины и сделал на своем смартфоне пару прикольных фото. Если не будешь лениться - закончишь КГТА. А если не будешь лениться в квесте - получишь приз! Удачи! Держи первое задание:
                             """,
                     # keyboard = keyboard.get_keyboard()
 		            )
@@ -144,17 +159,17 @@ def getQuestion(randomId, userID):
     print("получение фото от 1 вопроса")
    
 
-    sheet.update_cell(rowQuestions1, 4, f"""=IMAGE("{str(messageID)}")""")
-    rowQuestions1 += 1
+    sheet.update_cell(rowQuestions1ForUsers, 4, f"""=IMAGE("{str(messageID)}")""")
+    # rowQuestions1 += 1
     
     void = 0
     photoGet = ['a']
-    countPoint += getQuestion2(randomId, userID)
+    countPoint += getQuestion2(randomId, userID,rowQuestions2ForUsers,rowQuestions3ForUsers,rowQuestions4ForUsers,rowQuestions5ForUsers,rowQuestions6ForUsers)
 
     sendMessege(userID, randomId, "Поздравляю! Все испытания позади! Если ты был честен, умен и креативен со мной, то жди сообщение о призе. Твой бот – Валера. Надеюсь еще спишемся")
     print("Finish getQuestion: ", countPoint)
 
-def getQuestion2(randomId, userID):
+def getQuestion2(randomId, userID,rowQuestions2ForUsers,rowQuestions3ForUsers,rowQuestions4ForUsers,rowQuestions5ForUsers,rowQuestions6ForUsers):
     global rowQuestions2
 
     keyboard = keyboardCreater("87", "90", "72", "88")
@@ -173,23 +188,24 @@ def getQuestion2(randomId, userID):
 
     otvetQvestions = getMessege("87", userID)
 
+    
     if otvetQvestions:
         countPoint += 1
         print("getQuestion2: ", countPoint)
 
-        sheet.update_cell(rowQuestions2, 5, "1")
-        rowQuestions2 += 1 
+        sheet.update_cell(rowQuestions2ForUsers, 5, "1")
+        # rowQuestions2 += 1 
         
     else: 
-        sheet.update_cell(rowQuestions2, 5, "0")
-        rowQuestions2 += 1 
+        sheet.update_cell(rowQuestions2ForUsers, 5, "0")
+        # rowQuestions2 += 1 
         print("getQuestion2: ", countPoint)
 
-    countPoint += getQuestion3(randomId, userID)
+    countPoint += getQuestion3(randomId, userID,rowQuestions3ForUsers,rowQuestions4ForUsers,rowQuestions5ForUsers,rowQuestions6ForUsers)
     
     return countPoint
 
-def getQuestion3(randomId, userID):
+def getQuestion3(randomId, userID,rowQuestions3ForUsers,rowQuestions4ForUsers,rowQuestions5ForUsers,rowQuestions6ForUsers):
     global rowQuestions3, void, photoGet
 
     countPoint = 0
@@ -222,16 +238,16 @@ def getQuestion3(randomId, userID):
     print("получение фото от 2 вопроса")
    
 
-    sheet.update_cell(rowQuestions3, 6, f"""=IMAGE("{str(messageID)}")""")
-    rowQuestions3 += 1
+    sheet.update_cell(rowQuestions3ForUsers, 6, f"""=IMAGE("{str(messageID)}")""")
+    # rowQuestions3 += 1
     void = 0
     photoGet = 0
     
-    getQuestion4(randomId, userID)
+    getQuestion4(randomId, userID,rowQuestions4ForUsers,rowQuestions5ForUsers,rowQuestions6ForUsers)
 
     return countPoint
 
-def getQuestion4(randomId, userID):
+def getQuestion4(randomId, userID,rowQuestions4ForUsers,rowQuestions5ForUsers,rowQuestions6ForUsers):
     global rowQuestions4
     
     countPoint = 0
@@ -254,16 +270,16 @@ def getQuestion4(randomId, userID):
         countPoint += 1
         print("getQuestion4: ", countPoint)
 
-        sheet.update_cell(rowQuestions4, 7, "1")
-        rowQuestions4 += 1 
+        sheet.update_cell(rowQuestions4ForUsers, 7, "1")
+        # rowQuestions4 += 1 
     else :
         print("getQuestion4: ", countPoint)
-        sheet.update_cell(rowQuestions4, 7, "0")
-        rowQuestions4 += 1 
+        sheet.update_cell(rowQuestions4ForUsers, 7, "0")
+        # rowQuestions4 += 1 
 
-    getQuestion5(randomId, userID)
+    getQuestion5(randomId, userID,rowQuestions5ForUsers,rowQuestions6ForUsers)
 
-def getQuestion5(randomId, userID):
+def getQuestion5(randomId, userID,rowQuestions5ForUsers,rowQuestions6ForUsers):
     global rowQuestions5
 
     vk.messages.send( #Отправляем сообщение
@@ -288,12 +304,12 @@ def getQuestion5(randomId, userID):
 
     otvetQvestions5 = getMessege1("", userID)
 
-    sheet.update_cell(rowQuestions5,8,otvetQvestions5)
-    rowQuestions5 += 1
+    sheet.update_cell(rowQuestions5ForUsers,8,otvetQvestions5)
+    # rowQuestions5 += 1
 
-    getQuestion6(randomId, userID)
+    getQuestion6(randomId, userID,rowQuestions6ForUsers)
 
-def getQuestion6(randomId, userID):
+def getQuestion6(randomId, userID,rowQuestions6ForUsers):
     global rowQuestions6
 
     vk.messages.send( #Отправляем сообщение
@@ -324,8 +340,8 @@ def getQuestion6(randomId, userID):
     print("получение фото от 1 вопроса")
    
 
-    sheet.update_cell(rowQuestions6, 9, f"""=IMAGE("{str(messageID)}")""")
-    rowQuestions6 += 1
+    sheet.update_cell(rowQuestions6ForUsers, 9, f"""=IMAGE("{str(messageID)}")""")
+    # rowQuestions6 += 1
 
 def newUser():
     print("Проверка подключения")
@@ -340,22 +356,28 @@ def newUser():
     return True
 
 # %% [Run Server] 
-
+# start = False
 for event in longpoll.listen():
     
     print(event.type)
     
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
+        vk.messages.getConversations(offset = 0, count = 1)  
+        if event.text == "2020":
+            start = True
+        
+        # start = getMessege("2020", event.user_id)
 
-        whoUser = newUser()
-
-        if whoUser:
-            print("Новый пользователь")
-            usersId.append(event.user_id)
-
-            Thread(target=getQuestion, args=(event.random_id, event.user_id)).start() # Запуск нового потока для нового пользвоателя
-        else:
-            print("Старый пользователь")
+        if start:
+            whoUser = newUser()
+        
+            if whoUser:
+                print("Новый пользователь")
+                # usersId.append(event.user_id)
+                usersId.append(event.user_id)
+                Thread(target=getQuestion, args=(event.random_id, event.user_id)).start() # Запуск нового потока для нового пользвоателя
+            else:
+                print("Старый пользователь")
 
 
            
